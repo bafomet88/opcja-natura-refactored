@@ -18,5 +18,13 @@ module.exports = {
         path: `${__dirname}/src/assets/images/`,
       },
     },
+    {
+      resolve: "gatsby-source-swell",
+      options: {
+        storeId: "opcja-natura",
+        secretKey: process.env.GATSBY_SWELL_SECRET_KEY,
+        dataTypes: ["category", "product"],
+      },
+    },
   ],
 }
