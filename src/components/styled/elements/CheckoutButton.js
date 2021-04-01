@@ -3,13 +3,19 @@ import styled from "styled-components"
 import PropTypes from "prop-types"
 
 const StyledButton = styled.button`
-  background: ${props => props.background || "#fff"};
+  background: linear-gradient(
+    345deg,
+    rgba(136, 66, 46, 1) 0%,
+    rgba(252, 199, 155, 1) 50%,
+    rgba(136, 66, 46, 1) 100%
+  );
   padding: ${props => props.padding || "1em 2em"};
+  border: 1px solid #fff;
   text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.primary};
+  color: #fff;
   letter-spacing: 0.1em;
   vertical-align: middle;
-  border: 1px solid ${props => props.color || "#9a6b50"};
+
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
@@ -24,12 +30,7 @@ const StyledButton = styled.button`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      345deg,
-      rgba(136, 66, 46, 1) 0%,
-      rgba(252, 199, 155, 1) 50%,
-      rgba(136, 66, 46, 1) 100%
-    );
+    background: #fff;
     transform: scaleX(0);
     transform-origin: 0 50%;
     transition-property: transform;
@@ -38,12 +39,13 @@ const StyledButton = styled.button`
   }
 
   :focus {
-    border: 1px solid #fff;
+    border: 1px solid ${({ theme }) => theme.colors.primary};
   }
 
   :hover,
   :active {
-    color: #fff;
+    color: ${({ theme }) => theme.colors.primary};
+    border: 1px solid ${({ theme }) => theme.colors.primary};
   }
 
   :hover:before,
@@ -52,20 +54,16 @@ const StyledButton = styled.button`
   }
 `
 
-const Button = ({ text, color, padding, background }) => {
-  return (
-    <StyledButton color={color} padding={padding} background={background}>
-      {text}
-    </StyledButton>
-  )
+const CheckoutButton = ({ children }) => {
+  return <StyledButton>{children}</StyledButton>
 }
 
-Button.defaultProps = {
+CheckoutButton.defaultProps = {
   text: "czytaj więcej",
 }
 
-Button.propTypes = {
+CheckoutButton.propTypes = {
   text: PropTypes.string,
 }
 
-export default Button
+export default CheckoutButton

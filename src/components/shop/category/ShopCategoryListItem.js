@@ -31,7 +31,7 @@ const Product = ({ product }) => {
       <h3>{product.name}</h3>
       <span>podpis</span>
 
-      <p className="price-text">{financial(product.price)} PLN</p>
+      <p className="price-text">{financial(product.price, "PLN")}</p>
 
       <div
         className="buy-section"

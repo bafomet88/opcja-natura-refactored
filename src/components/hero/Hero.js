@@ -2,8 +2,7 @@ import React from "react"
 import { graphql, useStaticQuery } from "gatsby"
 import { getImage } from "gatsby-plugin-image"
 import styled from "styled-components"
-import { convertToBgImage } from "gbimage-bridge"
-import BackgroundImage from "gatsby-background-image"
+import { BgImage } from "gbimage-bridge"
 
 const GbiBridged = ({ children }) => {
   const { placeholderImage } = useStaticQuery(
@@ -15,20 +14,21 @@ const GbiBridged = ({ children }) => {
           childImageSharp {
             gatsbyImageData(
               width: 1920
+              formats: [AUTO, WEBP]
               placeholder: BLURRED
-              formats: [AUTO, WEBP, AVIF]
+              quality: 90
             )
           }
         }
       }
     `
   )
-  const image = getImage(placeholderImage)
+  const pluginImage = getImage(placeholderImage)
 
   // Use like this:
-  const bgImage = convertToBgImage(image)
+  /*   const bgImage = convertToBgImage(image) */
 
-  const StyledBanner = styled(BackgroundImage)`
+  const StyledBanner = styled(BgImage)`
     height: 95vh;
     position: relative;
     margin-top: -10rem;
@@ -36,13 +36,7 @@ const GbiBridged = ({ children }) => {
   `
 
   return (
-    <StyledBanner
-      Tag="section"
-      // Spread bgImage into BackgroundImage:
-      {...bgImage}
-      preserveStackingContext
-    >
-      <div style={{ minHeight: 1000, minWidth: 1000 }}></div>
+    <StyledBanner Tag="section" image={pluginImage}>
       {children}}
     </StyledBanner>
   )

@@ -1,3 +1,3 @@
-export const financial = price => {
-  return Number.parseFloat(price).toFixed(2)
+export const financial = (price, currency) => {
+  return `${Number.parseFloat(price).toFixed(2)} ${currency}`
 }

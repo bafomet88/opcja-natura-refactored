@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react"
 import swell from "swell-js"
 
-swell.init(
-  process.env.GATSBY_SWELL_STORE_NAME,
-  process.env.GATSBY_SWELL_PUBLIC_KEY
-)
-
 export const CartContext = React.createContext()
 
 const CartContextProvider = ({ children }) => {
   const [cart, setCart] = useState({})
   const [cartVisible, setCartVisible] = useState(false)
+  const [couponMessage, setCouponMessage] = useState("")
 
   const fetchCart = async () => {
     const cart = await swell.cart.get()
@@ -23,6 +19,7 @@ const CartContextProvider = ({ children }) => {
     const cart = await swell.cart.addItem(productId, quantity)
 
     setCart(cart)
+    setCartVisible(true)
     console.log("addToCart", cart)
   }
 
@@ -40,8 +37,19 @@ const CartContextProvider = ({ children }) => {
     console.log("removeItem", cart)
   }
 
+  const handleApplyCoupon = async couponName => {
+    try {
+      const response = await swell.cart.applyCoupon(couponName)
+      setCart(response.cart)
+      setCouponMessage("Kupon dodany")
+    } catch (err) {
+      console.log(err)
+      setCouponMessage("Stała się kupa")
+    }
+  }
+
   const handleCartVisible = () => {
-    setCartVisible(true)
+    setCartVisible(!cartVisible)
   }
 
   useEffect(() => {
@@ -58,6 +66,9 @@ const CartContextProvider = ({ children }) => {
         handleCartVisible,
         handleUpdateItem,
         handleRemoveItem,
+        handleApplyCoupon,
+        handleCartVisible,
+        couponMessage,
       }}
     >
       {children}
