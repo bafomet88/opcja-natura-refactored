@@ -36,7 +36,7 @@ const Close = styled(VscClose)`
   align-self: center;
 `
 
-const CartHeader = ({ cartVisible }) => {
+const CartHeader = () => {
   const { handleCartVisible } = useContext(CartContext)
   return (
     <CartTitle>

@@ -21,8 +21,6 @@ const ShopCategoriesMenu = () => {
     allSwellCategory: { nodes: categories },
   } = useStaticQuery(query)
 
-  console.log(categories)
-
   return (
     <>
       {categories.map(category => {

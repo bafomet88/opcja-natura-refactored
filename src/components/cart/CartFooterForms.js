@@ -47,6 +47,8 @@ const CartFooterForms = React.memo(item => {
     }
   }
 
+  console.log("REDER CART FORMS")
+
   return (
     <div>
       <FormHeader>

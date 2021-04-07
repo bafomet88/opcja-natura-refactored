@@ -78,7 +78,7 @@ const Cart = React.memo(() => {
   }
 
   if (!cart) {
-    return <EmptyCart />
+    return ""
   }
 
   if (!cart.items) {
@@ -94,7 +94,7 @@ const Cart = React.memo(() => {
       {backdrop}
       <Wrapper cartVisible={cartVisible}>
         <ScrollingWrapper>
-          <CartHeader cartVisible={cartVisible} />
+          <CartHeader />
           {!cart.items.length ? <EmptyCart /> : <FilledCart />}
         </ScrollingWrapper>
       </Wrapper>

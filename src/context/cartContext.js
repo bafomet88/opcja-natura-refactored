@@ -3,6 +3,18 @@ import swell from "swell-js"
 
 export const CartContext = React.createContext()
 
+/* const cartReducer = (currCart, action) => {
+  switch (action.type) {
+    case "SET_CART":
+      return action.cart;
+    case "ADD_ITEM":
+    case "CHANGE_QTY":
+    case "DELETE_ITEM":
+    case "ADD_COUPON":
+    case "ADD_COMMENT":
+  }
+} */
+
 const CartContextProvider = ({ children }) => {
   const [cart, setCart] = useState(null)
   const [cartVisible, setCartVisible] = useState(false)
@@ -46,24 +58,27 @@ const CartContextProvider = ({ children }) => {
       try {
         const cart = await swell.cart.applyCoupon(couponName)
         setCart(cart)
-        /* setCouponMessage("Kupon dodany") */
+        setCouponMessage("Kupon dodany")
       } catch (err) {
         console.log(err)
-        /*  setCouponMessage("Stała się kupa") */
+        setCouponMessage("Stała się kupa")
       }
     },
     [cart]
   )
 
-  const handleApplyComment = async commentText => {
-    const cart = await swell.cart.update({
-      metadata: { customerComment: commentText },
-    })
+  const handleApplyComment = useCallback(
+    async commentText => {
+      const cart = await swell.cart.update({
+        metadata: { customerComment: commentText },
+      })
 
-    setCart(cart)
-    setCommentMessage("Komentarz został dodany")
-    console.log("comment added", cart)
-  }
+      setCart(cart)
+      setCommentMessage("Komentarz został dodany")
+      console.log("comment added", cart)
+    },
+    [cart]
+  )
 
   const handleCartVisible = () => {
     setCartVisible(!cartVisible)

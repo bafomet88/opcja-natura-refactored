@@ -38,8 +38,10 @@ const ButtonContainer = styled.div`
   flex-direction: column;
 `
 
-const CartFooter = () => {
+const CartFooter = React.memo(() => {
   const { cart, handleApplyCoupon, couponMessage } = useContext(CartContext)
+
+  console.log("REDER CART FOOTER")
 
   return (
     <Wrapper>
@@ -57,6 +59,6 @@ const CartFooter = () => {
       </ButtonContainer>
     </Wrapper>
   )
-}
+})
 
 export default CartFooter
