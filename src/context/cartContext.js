@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import swell from "swell-js"
 
 export const CartContext = React.createContext()
 
 const CartContextProvider = ({ children }) => {
-  const [cart, setCart] = useState({})
+  const [cart, setCart] = useState(null)
   const [cartVisible, setCartVisible] = useState(false)
   const [couponMessage, setCouponMessage] = useState("")
+  const [commentMessage, setCommentMessage] = useState("")
 
   const fetchCart = async () => {
     const cart = await swell.cart.get()
@@ -15,13 +16,16 @@ const CartContextProvider = ({ children }) => {
     console.log("fetchCart", cart)
   }
 
-  const handleAddToCart = async (productId, quantity) => {
-    const cart = await swell.cart.addItem(productId, quantity)
+  const handleAddToCart = useCallback(
+    async (productId, quantity) => {
+      const cart = await swell.cart.addItem(productId, quantity)
 
-    setCart(cart)
-    setCartVisible(true)
-    console.log("addToCart", cart)
-  }
+      setCart(cart)
+      setCartVisible(true)
+      console.log("addToCart", cart)
+    },
+    [cart]
+  )
 
   const handleUpdateItem = async (productId, newQuantity) => {
     const cart = await swell.cart.addItem(productId, { quantity: newQuantity })
@@ -37,15 +41,28 @@ const CartContextProvider = ({ children }) => {
     console.log("removeItem", cart)
   }
 
-  const handleApplyCoupon = async couponName => {
-    try {
-      const response = await swell.cart.applyCoupon(couponName)
-      setCart(response.cart)
-      setCouponMessage("Kupon dodany")
-    } catch (err) {
-      console.log(err)
-      setCouponMessage("Stała się kupa")
-    }
+  const handleApplyCoupon = useCallback(
+    async couponName => {
+      try {
+        const cart = await swell.cart.applyCoupon(couponName)
+        setCart(cart)
+        /* setCouponMessage("Kupon dodany") */
+      } catch (err) {
+        console.log(err)
+        /*  setCouponMessage("Stała się kupa") */
+      }
+    },
+    [cart]
+  )
+
+  const handleApplyComment = async commentText => {
+    const cart = await swell.cart.update({
+      metadata: { customerComment: commentText },
+    })
+
+    setCart(cart)
+    setCommentMessage("Komentarz został dodany")
+    console.log("comment added", cart)
   }
 
   const handleCartVisible = () => {
@@ -67,8 +84,10 @@ const CartContextProvider = ({ children }) => {
         handleUpdateItem,
         handleRemoveItem,
         handleApplyCoupon,
+        handleApplyComment,
         handleCartVisible,
         couponMessage,
+        commentMessage,
       }}
     >
       {children}

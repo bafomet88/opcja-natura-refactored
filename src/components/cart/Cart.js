@@ -53,8 +53,10 @@ const EmptyCartWrapper = styled.div`
   justify-self: center;
 `
 
-const Cart = () => {
+const Cart = React.memo(() => {
   const { cart, cartVisible } = useContext(CartContext)
+
+  console.log("RENDERING CART")
 
   let backdrop
 
@@ -98,6 +100,6 @@ const Cart = () => {
       </Wrapper>
     </>
   )
-}
+})
 
 export default Cart
