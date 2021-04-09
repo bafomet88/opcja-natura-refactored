@@ -4,7 +4,7 @@ import Footer from "./Footer/index"
 import CookieConsent from "./CookieConstent" */
 import styled from "styled-components"
 
-import { Cart } from "../index"
+import { Cart, Navbar } from "../index"
 
 const StyledWrapper = styled.div`
   max-width: 1920px;
@@ -12,10 +12,12 @@ const StyledWrapper = styled.div`
 `
 
 const Layout = ({ children, location }) => {
+  console.log(location)
+
   return (
     <StyledWrapper>
       <Cart />
-      {/*  <Navbar path={location.pathname} />  */}
+      <Navbar path={location.pathname} />
       <main>{children}</main>
       {/*      <CookieConsent />
           <Footer />*/}

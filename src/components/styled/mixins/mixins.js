@@ -46,3 +46,30 @@ export const linkBorderOut = css`
     width: 0%;
   }
 `
+
+export const linkBorderIn = css`
+  transition: all 200ms ease-in;
+  position: relative;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  position: relative;
+  overflow: hidden;
+
+  :before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    right: 100%;
+    bottom: 0;
+    background: #9a6b50;
+    height: 1px;
+    transition-property: right;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+  }
+  :hover:before,
+  :focus:before,
+  :active:before {
+    right: 0;
+  }
+`

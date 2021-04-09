@@ -20,7 +20,7 @@ const FormHeader = styled.div`
 `
 
 const Form = styled.div`
-  max-height: ${props => (props.formVisible ? "200px" : "0")};
+  max-height: ${props => (props.formVisible ? "150px" : "0")};
   overflow: hidden;
   transition: max-height 1s;
 `
@@ -29,15 +29,15 @@ const FormErrors = styled.div`
   display: block;
 `
 
-const CartFooterForms = React.memo(item => {
+const CartFooterForms = (item, handleFormVisible, formVisible) => {
   const {
     handleApplyCoupon,
     handleApplyComment,
     couponMessage,
     commentMessage,
   } = useContext(CartContext)
+
   const { register, handleSubmit, errors } = useForm()
-  const [formVisible, setFormVisible] = useState(false)
 
   const onSubmit = data => {
     if (item.Role === "Coupon") {
@@ -56,7 +56,7 @@ const CartFooterForms = React.memo(item => {
         <span
           role="button"
           className="cart-form-span_button"
-          onClick={() => setFormVisible(!formVisible)}
+          onClick={() => handleFormVisible}
         >
           {item.Link}
         </span>
@@ -84,6 +84,6 @@ const CartFooterForms = React.memo(item => {
       </Form>
     </div>
   )
-})
+}
 
 export default CartFooterForms

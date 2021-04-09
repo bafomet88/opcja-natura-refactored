@@ -5,13 +5,13 @@ import ShopCategoryPage from "../components/shop/category/ShopCategoryPage"
 
 import { Layout } from "../components/index"
 
-const ProductCategoryTemplate = ({ data }) => {
+const ProductCategoryTemplate = ({ data, location }) => {
   const {
     category,
     categoryProducts: { nodes: products },
   } = data
   return (
-    <Layout>
+    <Layout location={location}>
       {/*       <SEO
         pageTitle={`${categories.categoryTitle} - kosmetyki Opcja Natura. Natura. To proste.`}
         pageDesc={categories.ogDesc}

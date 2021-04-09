@@ -291,6 +291,16 @@ button {
   font-weight: lighter !important;
 }
 */
+
+.navbar_icon {
+    height: 40px;
+    fill: inherit;
+    transition: all 0.5s ease-out;
+
+    @media (max-width: 680px) {
+      height: 30px;
+    }
+  }
 `
 
 export default GlobalStyle

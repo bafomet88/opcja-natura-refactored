@@ -1,17 +1,16 @@
 import React, { useContext, useState } from "react"
 import styled from "styled-components"
-import { useForm } from "react-hook-form"
 import Button from "../styled/elements/CheckoutButton"
 import { financial } from "../../utils/functions/financial"
 import CartFooterForm from "./CartFooterForms"
 
 import { CartContext } from "../../context/cartContext"
 
-import { borderAfter, linkBorderOut } from "../styled/mixins/mixins"
 import { cartData } from "./cartData"
 
 const Wrapper = styled.div`
   margin-top: auto;
+  padding-top: 3em;
   display: flex;
   flex-direction: column;
   row-gap: 1em;
@@ -39,7 +38,12 @@ const ButtonContainer = styled.div`
 `
 
 const CartFooter = React.memo(() => {
-  const { cart, handleApplyCoupon, couponMessage } = useContext(CartContext)
+  const { cart } = useContext(CartContext)
+  const [formVisible, setFormVisible] = useState(false)
+
+  const handleFormVisible = () => {
+    setFormVisible(!formVisible)
+  }
 
   console.log("REDER CART FOOTER")
 
@@ -51,7 +55,14 @@ const CartFooter = React.memo(() => {
       </CartSum>
 
       {cartData.map(item => {
-        return <CartFooterForm key={item.id} {...item} />
+        return (
+          <CartFooterForm
+            key={item.id}
+            {...item}
+            handleFormVisible={handleFormVisible}
+            visible={formVisible}
+          />
+        )
       })}
 
       <ButtonContainer>
