@@ -39,11 +39,6 @@ const ButtonContainer = styled.div`
 
 const CartFooter = React.memo(() => {
   const { cart } = useContext(CartContext)
-  const [formVisible, setFormVisible] = useState(false)
-
-  const handleFormVisible = () => {
-    setFormVisible(!formVisible)
-  }
 
   console.log("REDER CART FOOTER")
 
@@ -55,14 +50,7 @@ const CartFooter = React.memo(() => {
       </CartSum>
 
       {cartData.map(item => {
-        return (
-          <CartFooterForm
-            key={item.id}
-            {...item}
-            handleFormVisible={handleFormVisible}
-            visible={formVisible}
-          />
-        )
+        return <CartFooterForm key={item.id} {...item} />
       })}
 
       <ButtonContainer>

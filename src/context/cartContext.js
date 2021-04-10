@@ -17,6 +17,8 @@ const cartReducer = (currCart, action) => {
       return { ...currCart, cart: action.cart }
     case "ADD_COMMENT":
       return { ...currCart, cart: action.cart }
+    case "UPDATE_SHIPPING":
+      return { ...currCart, cart: action.cart }
     default:
       throw new Error("error in reducer")
   }
@@ -97,6 +99,25 @@ const CartContextProvider = ({ children }) => {
     console.log("initial fetch cart fired")
   }, [])
 
+  const handleUpadateShipping = async () => {
+    await swell.cart.update({
+      shipping: {
+        name: "Julia Sanchez",
+        address1: "560 Olive Drive",
+        address2: "",
+        city: "Ellinwood",
+        state: "KS",
+        zip: "67526",
+        country: "US",
+        phone: "620-564-3737",
+        price: 9,
+      },
+    })
+
+    dispatchCart({ type: "UPDATE_SHIPPING", cart: cart })
+    console.log("UPDATE_SHIPPING", cart)
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -111,6 +132,7 @@ const CartContextProvider = ({ children }) => {
         handleCartVisible,
         couponMessage,
         commentMessage,
+        handleUpadateShipping,
       }}
     >
       {children}

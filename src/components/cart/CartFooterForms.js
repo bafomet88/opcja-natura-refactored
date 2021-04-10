@@ -29,15 +29,20 @@ const FormErrors = styled.div`
   display: block;
 `
 
-const CartFooterForms = (item, handleFormVisible, formVisible) => {
+const CartFooterForms = item => {
   const {
     handleApplyCoupon,
     handleApplyComment,
     couponMessage,
     commentMessage,
   } = useContext(CartContext)
+  const [formVisible, setFormVisible] = useState(false)
 
   const { register, handleSubmit, errors } = useForm()
+
+  const handleFormVisible = () => {
+    setFormVisible(!formVisible)
+  }
 
   const onSubmit = data => {
     if (item.Role === "Coupon") {
@@ -56,7 +61,7 @@ const CartFooterForms = (item, handleFormVisible, formVisible) => {
         <span
           role="button"
           className="cart-form-span_button"
-          onClick={() => handleFormVisible}
+          onClick={() => handleFormVisible()}
         >
           {item.Link}
         </span>

@@ -9,7 +9,7 @@ const Wrapper = styled.section`
   align-items: center;
 `
 
-export default function Home({ location }) {
+export default function CartPage({ location }) {
   return (
     <Layout location={location}>
       <Wrapper>
