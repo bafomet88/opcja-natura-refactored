@@ -17,7 +17,13 @@ const cartReducer = (currCart, action) => {
       return { ...currCart, cart: action.cart }
     case "ADD_COMMENT":
       return { ...currCart, cart: action.cart }
-    case "UPDATE_COUNTRY":
+    case "SET_SHIPPING_COUNTRY":
+      return { ...currCart, cart: action.cart }
+    case "SET_SHIPPING_METHOD":
+      return { ...currCart, cart: action.cart }
+    case "SET_SHIPPING_ADDRESS":
+      return { ...currCart, cart: action.cart }
+    case "SET_SHIPPING_INPOST":
       return { ...currCart, cart: action.cart }
     default:
       throw new Error("error in reducer")
@@ -109,8 +115,8 @@ const CartContextProvider = ({ children }) => {
       },
     })
 
-    dispatchCart({ type: "UPDATE_COUNTRY", cart: cart })
-    console.log("UPDATE_COUNTRY on cart", cart)
+    dispatchCart({ type: "SET_SHIPPING_COUNTRY", cart: cart })
+    console.log("SET_SHIPPING_COUNTRY", cart)
   }
 
   const handleGetShipping = async () => {
@@ -118,6 +124,51 @@ const CartContextProvider = ({ children }) => {
 
     setShippingMethods(response.services)
     console.log("GET COUNTRY", response.services)
+  }
+
+  const handleSetShipping = async shippingId => {
+    const cart = await swell.cart.update({
+      shipping: {
+        service: shippingId,
+      },
+    })
+
+    dispatchCart({ type: "SET_SHIPPING_METHOD", cart: cart })
+    console.log("SET_SHIPPING_METHOD", cart)
+  }
+
+  const handleUpdateShippingAddress = async (adress1, address2, city, zip) => {
+    const cart = await swell.cart.update({
+      shipping: {
+        address1: `${adress1 || ""}`,
+        address2: `${address2 || ""}`,
+        city: `${city || ""}`,
+        zip: `${zip || ""}`,
+      },
+      billing: {
+        address1: `${adress1 || ""}`,
+        address2: `${address2 || ""}`,
+        city: `${city || ""}`,
+        zip: `${zip || ""}`,
+      },
+    })
+
+    dispatchCart({ type: "SET_SHIPPING_ADDRESS", cart: cart })
+    console.log("SET_SHIPPING_ADRESS", cart)
+  }
+
+  const handleUpdateShippingInPost = async (adress1, machineNo, city, zip) => {
+    const cart = await swell.cart.update({
+      shipping: {
+        address1: `${adress1 || ""}`,
+        address2: `${machineNo || ""}`,
+        city: `${city || ""}`,
+        zip: `${zip || ""}`,
+      },
+    })
+
+    dispatchCart({ type: "SET_SHIPPING_INPOST", cart: cart })
+    console.log("SET_SHIPPING_INPOST", cart)
   }
 
   return (
@@ -137,6 +188,9 @@ const CartContextProvider = ({ children }) => {
         handleUpadateCountry,
         handleGetShipping,
         shippingMethods,
+        handleSetShipping,
+        handleUpdateShippingAddress,
+        handleUpdateShippingInPost,
       }}
     >
       {children}

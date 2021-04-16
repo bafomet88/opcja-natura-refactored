@@ -1,8 +1,12 @@
 import React, { useContext, useState, useEffect } from "react"
 import styled from "styled-components"
 import Layout from "../../components/layout/Layout"
-
-import { DeliveryMethods, BillingInPost } from "../../components/index"
+import {
+  DeliveryMethods,
+  CountrySelect,
+  CustomerData,
+  ShippingData,
+} from "../../components/index"
 import { addScript } from "../../utils/functions/addScript"
 import { initInpostMap } from "../../utils/functions/initInpostMap"
 import { CartContext } from "../../context/cartContext"
@@ -15,23 +19,8 @@ const DeliveryWrapper = styled.section`
   align-items: center;
 `
 
-const openModal = () => {
-  easyPack.modalMap(
-    function (point, modal) {
-      console.log(point)
-      modal.closeModal()
-    },
-    { width: 500, height: 600 }
-  )
-}
-
 export default function adres({ location }) {
   const { cart } = useContext(CartContext)
-  const [activeDeliveryId, setActiveDeliveryId] = useState(null)
-
-  const handleActiveDelivery = deliveryId => {
-    setActiveDeliveryId(deliveryId)
-  }
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.document) {
@@ -48,16 +37,13 @@ export default function adres({ location }) {
       {cart && (
         <>
           <DeliveryWrapper>
-            <DeliveryMethods
-              isActive={activeDeliveryId}
-              handleActiveDelivery={handleActiveDelivery}
-            />
+            <CountrySelect />
+            <DeliveryMethods />
           </DeliveryWrapper>
-          <BillingInPost />
+          <CustomerData />
+          <ShippingData />
         </>
       )}
-      <p onClick={() => openModal()}>open modal</p>
-      <p onClick={() => handleGetShipping()}>GET SHIPPING</p>
     </Layout>
   )
 }

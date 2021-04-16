@@ -4,6 +4,8 @@ export { default as Layout } from "./layout/Layout"
 export { default as Navbar } from "./navbar/Navbar"
 export { default as Cart } from "./cart/Cart"
 export { default as DeliveryMethods } from "./checkout/DeliveryMethods"
-export { default as BillingInPost } from "./checkout/BillingInPost"
+export { default as CustomerData } from "./checkout/CustomerData"
+export { default as CountrySelect } from "./checkout/CountrySelect"
+export { default as ShippingData } from "./checkout/ShippingData"
 
 /* export { default as Button } from "./styled/elements/GlobalButton" */
