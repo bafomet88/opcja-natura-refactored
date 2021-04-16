@@ -12,8 +12,6 @@ const StyledWrapper = styled.div`
 `
 
 const Layout = ({ children, location }) => {
-  console.log(location)
-
   return (
     <StyledWrapper>
       <Cart />

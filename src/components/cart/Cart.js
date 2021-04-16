@@ -56,7 +56,7 @@ const EmptyCartWrapper = styled.div`
 const Cart = React.memo(() => {
   const { cart, cartVisible } = useContext(CartContext)
 
-  console.log("RENDERING CART")
+  console.log("RENDERING CART component")
 
   let backdrop
 

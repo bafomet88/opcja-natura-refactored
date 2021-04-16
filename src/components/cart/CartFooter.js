@@ -3,6 +3,7 @@ import styled from "styled-components"
 import Button from "../styled/elements/CheckoutButton"
 import { financial } from "../../utils/functions/financial"
 import CartFooterForm from "./CartFooterForms"
+import { Link } from "gatsby"
 
 import { CartContext } from "../../context/cartContext"
 
@@ -50,12 +51,13 @@ const CartFooter = React.memo(() => {
       </CartSum>
 
       {cartData.map(item => {
-        return <CartFooterForm key={item.id} {...item} />
+        return <CartFooterForm key={item.Id} {...item} />
       })}
-
-      <ButtonContainer>
-        <CheckoutButton>Do kasy</CheckoutButton>
-      </ButtonContainer>
+      <Link to="/zamowienie/adres">
+        <ButtonContainer>
+          <CheckoutButton>Do kasy</CheckoutButton>
+        </ButtonContainer>
+      </Link>
     </Wrapper>
   )
 })

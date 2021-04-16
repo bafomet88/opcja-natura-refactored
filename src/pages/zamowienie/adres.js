@@ -1,34 +1,63 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useState, useEffect } from "react"
 import styled from "styled-components"
 import Layout from "../../components/layout/Layout"
-import { useForm } from "react-hook-form"
-import DeliveryMethods from "../../components/checkout/DeliveryMethods"
 
+import { DeliveryMethods, BillingInPost } from "../../components/index"
+import { addScript } from "../../utils/functions/addScript"
+import { initInpostMap } from "../../utils/functions/initInpostMap"
 import { CartContext } from "../../context/cartContext"
+import "../../utils/css/inpostModal.css"
 
-const Wrapper = styled.section`
+const DeliveryWrapper = styled.section`
+  max-width: 900px;
   display: flex;
   flex-direction: column;
   align-items: center;
 `
 
-export default function Step1({ location }) {
-  const [activeDeliveryId, setActiveDeliveryId] = useState(null)
-  const { handleUpadateShipping } = useContext(CartContext)
+const openModal = () => {
+  easyPack.modalMap(
+    function (point, modal) {
+      console.log(point)
+      modal.closeModal()
+    },
+    { width: 500, height: 600 }
+  )
+}
 
-  const { register, handleSubmit, errors } = useForm()
+export default function adres({ location }) {
+  const { cart } = useContext(CartContext)
+  const [activeDeliveryId, setActiveDeliveryId] = useState(null)
 
   const handleActiveDelivery = deliveryId => {
     setActiveDeliveryId(deliveryId)
   }
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.document) {
+      addScript("https://geowidget.easypack24.net/js/sdk-for-javascript.js")
+      initInpostMap()
+      console.log("initial use effect")
+    }
+  }, [])
+
+  console.log("render adres page", cart)
+
   return (
     <Layout location={location}>
-      <Wrapper>
-        <DeliveryMethods
-          isActive={activeDeliveryId}
-          handleActiveDelivery={handleActiveDelivery}
-        />
-      </Wrapper>
+      {cart && (
+        <>
+          <DeliveryWrapper>
+            <DeliveryMethods
+              isActive={activeDeliveryId}
+              handleActiveDelivery={handleActiveDelivery}
+            />
+          </DeliveryWrapper>
+          <BillingInPost />
+        </>
+      )}
+      <p onClick={() => openModal()}>open modal</p>
+      <p onClick={() => handleGetShipping()}>GET SHIPPING</p>
     </Layout>
   )
 }

@@ -17,7 +17,7 @@ const cartReducer = (currCart, action) => {
       return { ...currCart, cart: action.cart }
     case "ADD_COMMENT":
       return { ...currCart, cart: action.cart }
-    case "UPDATE_SHIPPING":
+    case "UPDATE_COUNTRY":
       return { ...currCart, cart: action.cart }
     default:
       throw new Error("error in reducer")
@@ -26,7 +26,7 @@ const cartReducer = (currCart, action) => {
 
 const CartContextProvider = ({ children }) => {
   const [cart, dispatchCart] = useReducer(cartReducer, {})
-  /*   const [cart, setCart] = useState(null) */
+  const [shippingMethods, setShippingMethods] = useState(null)
   const [cartVisible, setCartVisible] = useState(false)
   const [couponMessage, setCouponMessage] = useState("")
   const [commentMessage, setCommentMessage] = useState("")
@@ -99,23 +99,25 @@ const CartContextProvider = ({ children }) => {
     console.log("initial fetch cart fired")
   }, [])
 
-  const handleUpadateShipping = async () => {
-    await swell.cart.update({
+  const handleUpadateCountry = async countryCode => {
+    const cart = await swell.cart.update({
+      billing: {
+        country: `${countryCode}`,
+      },
       shipping: {
-        name: "Julia Sanchez",
-        address1: "560 Olive Drive",
-        address2: "",
-        city: "Ellinwood",
-        state: "KS",
-        zip: "67526",
-        country: "US",
-        phone: "620-564-3737",
-        price: 9,
+        country: `${countryCode}`,
       },
     })
 
-    dispatchCart({ type: "UPDATE_SHIPPING", cart: cart })
-    console.log("UPDATE_SHIPPING", cart)
+    dispatchCart({ type: "UPDATE_COUNTRY", cart: cart })
+    console.log("UPDATE_COUNTRY on cart", cart)
+  }
+
+  const handleGetShipping = async () => {
+    const response = await swell.cart.getShippingRates()
+
+    setShippingMethods(response.services)
+    console.log("GET COUNTRY", response.services)
   }
 
   return (
@@ -132,7 +134,9 @@ const CartContextProvider = ({ children }) => {
         handleCartVisible,
         couponMessage,
         commentMessage,
-        handleUpadateShipping,
+        handleUpadateCountry,
+        handleGetShipping,
+        shippingMethods,
       }}
     >
       {children}

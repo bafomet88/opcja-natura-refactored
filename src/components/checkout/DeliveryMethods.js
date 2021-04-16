@@ -1,5 +1,6 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import styled from "styled-components"
+import { CartContext } from "../../context/cartContext"
 
 const Wrapper = styled.section`
   position: relative;
@@ -32,46 +33,95 @@ const Summary = styled.div`
   position: relative;
 `
 
-const deliveryData = [
-  {
-    Id: "1",
-    Name: "Odbiór osobisty",
-    Icon: "1",
-    Price: 0,
-  },
-  {
-    Id: "2",
-    Name: "Dostawa kurierem",
-    Icon: "2",
-    Price: 11,
-  },
-  {
-    Id: "3",
-    Name: "Paczkomaty 24/7",
-    Icon: "3",
-    Price: 11,
-  },
+const CountrySelect = styled.div`
+  position: relative;
+`
+
+const options = [
+  { value: "PL", name: "Polska" },
+  { value: "DE", name: "Hitler" },
 ]
 
-const DeliveryMethod = ({ isActive, handleActiveDelivery }) => {
+const DeliveryMethod = (isActive, handleActiveDelivery) => {
+  const {
+    handleUpadateCountry,
+    handleGetShipping,
+    shippingMethods,
+    cart,
+  } = useContext(CartContext)
+
+  const [shippingCountry, setShippingCountry] = useState("")
+  const defaultCountry = "PL"
+
+  console.log("shippignCountry", shippingCountry)
+
+  useEffect(() => {
+    if (!shippingCountry && !cart.billing.country) {
+      handleUpadateCountry(defaultCountry).then(() => {
+        handleGetShipping()
+        console.log("FIRST SHIPPING RENDER: defoult caountry")
+      })
+    } else if (!shippingCountry && cart.billing.country) {
+      handleUpadateCountry(cart.billing.country).then(() => {
+        handleGetShipping()
+        console.log("FIRST SHIPPING RENDER: get country from cart")
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    if (shippingCountry) {
+      handleUpadateCountry(shippingCountry).then(() => {
+        handleGetShipping()
+        console.log("change country to ship")
+      })
+    }
+  }, [shippingCountry])
+
+  console.log("deliveryMethods render", cart)
+
+  const DeliveryCountryMethods = () => {
+    return (
+      <>
+        <Boxes>
+          {shippingMethods.map((item, index) => (
+            <Box
+              key={item.id}
+              onClick={() => handleActiveDelivery(index + 1)}
+              className={`${index + 1 === isActive && "active"}`}
+            >
+              <Icon>{index + 1}</Icon>
+              <Title>{item.name}</Title>
+              <Price>{item.price}</Price>
+            </Box>
+          ))}
+        </Boxes>
+        <Summary>
+          <h5>Koszty dostawy</h5>
+          <span>20</span>
+        </Summary>
+      </>
+    )
+  }
+
   return (
     <Wrapper>
-      <Boxes>
-        {deliveryData.map(item => (
-          <Box
-            onClick={() => handleActiveDelivery(item.Id)}
-            className={`${item.Id === isActive && "active"}`}
-          >
-            <Icon>{item.Icon}</Icon>
-            <Title>{item.Name}</Title>
-            <Price>{item.Price}</Price>
-          </Box>
-        ))}
-      </Boxes>
-      <Summary>
-        <h5>Koszty dostawy</h5>
-        <span>20</span>
-      </Summary>
+      <CountrySelect>
+        <label htmlfor="delivery-country">Kraj dostawy</label>
+        <select
+          name="country"
+          id="delivery-country"
+          value={shippingCountry || cart.billing.country}
+          onChange={e => setShippingCountry(e.target.value)}
+        >
+          {options.map(option => (
+            <option key={option.value} value={option.value}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      </CountrySelect>
+      {shippingMethods ? <DeliveryCountryMethods /> : ""}
     </Wrapper>
   )
 }

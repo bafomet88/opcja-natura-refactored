@@ -79,7 +79,7 @@ const QuantitySelector = styled.div`
 `
 
 const StyledMinus = styled(Minus)`
-  visibility: ${props => (props.active ? "visible" : "hidden")};
+  visibility: ${props => (props.active === "true" ? "visible" : "hidden")};
 `
 
 const CartItem = item => {
@@ -98,14 +98,14 @@ const CartItem = item => {
             className="icon"
             role="button"
             onClick={() => handleUpdateItem(item.product_id, -1)}
-            active={item.quantity >= 2 ? true : undefined}
+            active={item.quantity >= 2 ? "true" : undefined}
           />
           <p>{item.quantity}</p>
           <Plus
             className="icon"
             role="button"
             onClick={() => handleUpdateItem(item.product_id, 1)}
-            active={true}
+            active="true"
           />
         </QuantitySelector>
         <span role="button" onClick={() => handleRemoveItem(item.id)}>
