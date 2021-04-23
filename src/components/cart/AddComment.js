@@ -6,6 +6,11 @@ import { CartContext } from "../../context/cartContext"
 
 import { linkBorderOut } from "../styled/mixins/mixins"
 
+const Wrapper = styled.div`
+  display: grid;
+  grid-gap: 1em;
+`
+
 const FormHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -29,14 +34,10 @@ const FormErrors = styled.div`
   display: block;
 `
 
-const CartFooterForms = item => {
-  const {
-    handleApplyCoupon,
-    handleApplyComment,
-    couponMessage,
-    commentMessage,
-  } = useContext(CartContext)
-  const [formVisible, setFormVisible] = useState(false)
+const AddComment = () => {
+  const { handleApplyComment, couponMessage, cart } = useContext(CartContext)
+  const [isLoading, setIsLoading] = useContext(false)
+  const [formVisible, setFormVisible] = useState()
 
   const { register, handleSubmit, errors } = useForm()
 
@@ -44,51 +45,59 @@ const CartFooterForms = item => {
     setFormVisible(!formVisible)
   }
 
-  const onSubmit = data => {
-    if (item.Role === "Coupon") {
-      handleApplyCoupon(data.discount_code)
-    } else if (item.Role === "Comment") {
-      handleApplyComment(data.comment)
-    }
+  const onSubmitComment = data => {
+    handleApplyComment(data.comment)
   }
 
-  console.log("REDER CART FORMS")
-
-  return (
-    <div>
+  const CommentForm = () => (
+    <>
       <FormHeader>
-        <p>{item.Text}</p>
+        <p>"Zamówienie na prezent? Inne Uwagi?</p>
         <span
           role="button"
           className="cart-form-span_button"
           onClick={() => handleFormVisible()}
         >
-          {item.Link}
+          Komentarz
         </span>
       </FormHeader>
+
       <Form formVisible={formVisible}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form id="comment" onSubmit={handleSubmit(onSubmitComment)}>
           <input
             type="text"
-            placeholder={`${item.FormPlaceholder}`}
-            name={`${item.FormName}`}
+            placeholder="wpisz kod"
+            name="comment"
             ref={register({
-              required: `${item.FormRequiredMessage}`,
+              required: "wpisz treść",
               minLength: {
                 value: 3,
-                message: `${item.FormLengthMessage}`,
+                message: "za krótka wiadomość",
               },
             })}
           />
           <input type="submit" value="dodaj" />
         </form>
+        {/*   {isLoading && <div>loading...</div>} */}
         <FormErrors>
           {errors.discount_code && <p>{errors.discount_code.message}</p>}
           {couponMessage && <p>{couponMessage}</p>}
         </FormErrors>
       </Form>
-    </div>
+    </>
+  )
+
+  return (
+    <Wrapper>
+      {cart.comments ? (
+        <div>
+          <p>Komentarz dodany</p>
+        </div>
+      ) : (
+        <CommentForm />
+      )}
+    </Wrapper>
   )
 }
 
-export default CartFooterForms
+export default AddComment

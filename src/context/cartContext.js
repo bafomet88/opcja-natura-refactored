@@ -1,4 +1,10 @@
-import React, { useState, useReducer, useEffect, useCallback } from "react"
+import React, {
+  useState,
+  useReducer,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react"
 import swell from "swell-js"
 
 export const CartContext = React.createContext()
@@ -6,25 +12,27 @@ export const CartContext = React.createContext()
 const cartReducer = (currCart, action) => {
   switch (action.type) {
     case "SET_CART":
-      return { cart: action.cart }
+      return { cart: action.cart, loading: false }
+    case "INIT":
+      return { ...currCart, loading: true }
     case "ADD_ITEM":
-      return { ...currCart, cart: action.cart }
+      return { ...currCart, cart: action.cart, loading: false }
     case "CHANGE_QTY":
-      return { ...currCart, cart: action.cart }
+      return { ...currCart, cart: action.cart, loading: false }
     case "REMOVE_ITEM":
-      return { ...currCart, cart: action.cart }
+      return { ...currCart, cart: action.cart, loading: false }
     case "ADD_COUPON":
-      return { ...currCart, cart: action.cart }
+      return { ...currCart, cart: action.cart, loading: false }
     case "ADD_COMMENT":
-      return { ...currCart, cart: action.cart }
+      return { ...currCart, cart: action.cart, loading: false }
     case "SET_SHIPPING_COUNTRY":
-      return { ...currCart, cart: action.cart }
+      return { ...currCart, cart: action.cart, loading: false }
     case "SET_SHIPPING_METHOD":
-      return { ...currCart, cart: action.cart }
+      return { ...currCart, cart: action.cart, loading: false }
     case "SET_SHIPPING_ADDRESS":
-      return { ...currCart, cart: action.cart }
+      return { ...currCart, cart: action.cart, loading: false }
     case "SET_SHIPPING_INPOST":
-      return { ...currCart, cart: action.cart }
+      return { ...currCart, cart: action.cart, loading: false }
     default:
       throw new Error("error in reducer")
   }
@@ -32,6 +40,7 @@ const cartReducer = (currCart, action) => {
 
 const CartContextProvider = ({ children }) => {
   const [cart, dispatchCart] = useReducer(cartReducer, {})
+  /* const [isLoading, setIsLoading] = useState(false) */
   const [shippingMethods, setShippingMethods] = useState(null)
   const [cartVisible, setCartVisible] = useState(false)
   const [couponMessage, setCouponMessage] = useState("")
@@ -44,18 +53,21 @@ const CartContextProvider = ({ children }) => {
     console.log("fetchCart", cart)
   }
 
-  const handleAddToCart = useCallback(
-    async (productId, quantity) => {
+  const handleAddToCart = async (productId, quantity) => {
+    dispatchCart({ type: "INIT" })
+    try {
       const cart = await swell.cart.addItem(productId, quantity)
 
       dispatchCart({ type: "ADD_ITEM", cart: cart })
       setCartVisible(true)
       console.log("addToCart", cart)
-    },
-    [cart]
-  )
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const handleUpdateItem = async (productId, newQuantity) => {
+    dispatchCart({ type: "INIT" })
     const cart = await swell.cart.addItem(productId, { quantity: newQuantity })
 
     dispatchCart({ type: "CHANGE_QTY", cart: cart })
@@ -69,31 +81,28 @@ const CartContextProvider = ({ children }) => {
     console.log("removeItem", cart)
   }
 
-  const handleApplyCoupon = useCallback(
-    async couponName => {
-      try {
-        const cart = await swell.cart.applyCoupon(couponName)
-        dispatchCart({ type: "ADD_COUPON", cart: cart })
-        setCouponMessage("Kupon dodany")
-      } catch (err) {
-        console.log(err)
-        setCouponMessage("Stała się kupa")
-      }
-    },
-    [cart.discounts]
-  )
+  const handleApplyCoupon = async couponName => {
+    try {
+      const cart = await swell.cart.applyCoupon(couponName)
+      dispatchCart({ type: "ADD_COUPON", cart: cart })
+      setCouponMessage("Kupon dodany")
+    } catch (err) {
+      console.log(err)
+      setCouponMessage("Stała się kupa")
+    }
+  }
 
   const handleApplyComment = useCallback(
     async commentText => {
       const cart = await swell.cart.update({
-        metadata: { customerComment: commentText },
+        comments: commentText,
       })
 
       dispatchCart({ type: "ADD_COMMENT", cart: cart })
       setCommentMessage("Komentarz został dodany")
       console.log("comment added", cart)
     },
-    [cart]
+    [cart.comments]
   )
 
   const handleCartVisible = () => {
@@ -109,13 +118,21 @@ const CartContextProvider = ({ children }) => {
     const cart = await swell.cart.update({
       billing: {
         country: `${countryCode}`,
+        address1: null,
+        address2: null,
+        city: null,
+        zip: null,
       },
       shipping: {
         country: `${countryCode}`,
+        address1: null,
+        address2: null,
+        city: null,
+        zip: null,
       },
     })
 
-    dispatchCart({ type: "SET_SHIPPING_COUNTRY", cart: cart })
+    dispatchCart({ type: "handleUpadateCountry", cart: cart })
     console.log("SET_SHIPPING_COUNTRY", cart)
   }
 
@@ -171,31 +188,39 @@ const CartContextProvider = ({ children }) => {
     console.log("SET_SHIPPING_INPOST", cart)
   }
 
-  return (
-    <CartContext.Provider
-      value={{
-        cart: cart.cart,
-        cartVisible,
-        handleAddToCart,
-        handleCartVisible,
-        handleUpdateItem,
-        handleRemoveItem,
-        handleApplyCoupon,
-        handleApplyComment,
-        handleCartVisible,
-        couponMessage,
-        commentMessage,
-        handleUpadateCountry,
-        handleGetShipping,
-        shippingMethods,
-        handleSetShipping,
-        handleUpdateShippingAddress,
-        handleUpdateShippingInPost,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+  const value = useMemo(
+    () => ({
+      cart: cart.cart,
+      loading: cart.loading,
+      cartVisible,
+      setCartVisible,
+      handleAddToCart,
+      handleCartVisible,
+      handleUpdateItem,
+      handleRemoveItem,
+      handleApplyCoupon,
+      handleApplyComment,
+      handleCartVisible,
+      couponMessage,
+      commentMessage,
+      handleUpadateCountry,
+      handleGetShipping,
+      shippingMethods,
+      handleSetShipping,
+      handleUpdateShippingAddress,
+      handleUpdateShippingInPost,
+    }),
+    [
+      cart,
+      cart.loading,
+      shippingMethods,
+      couponMessage,
+      commentMessage,
+      cartVisible,
+    ]
   )
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }
 
 export default CartContextProvider

@@ -4,6 +4,11 @@ import { CartContext } from "../../context/cartContext"
 
 const Wrapper = styled.section`
   position: relative;
+  margin-bottom: 3em;
+
+  label {
+    margin-right: 1em;
+  }
 `
 
 const options = [
@@ -28,10 +33,8 @@ const CountrySelect = React.memo(() => {
         console.log("FIRST SHIPPING RENDER: defoult caountry")
       })
     } else if (!shippingCountry && cart.billing.country) {
-      handleUpadateCountry(cart.billing.country).then(() => {
-        handleGetShipping()
-        console.log("FIRST SHIPPING RENDER: get country from cart")
-      })
+      handleGetShipping()
+      console.log("FIRST SHIPPING RENDER: get country from cart")
     }
   }, [])
 

@@ -15,25 +15,27 @@ const Wrapper = styled.div`
 const ShippingData = () => {
   const { cart } = useContext(CartContext)
 
-  const settings = shippingOption => {
+  const selectedShipping = shippingOption => {
     switch (shippingOption) {
       case "local_pickup":
         return <ShippingLocalPickup />
       case "express":
         return <ShippingInPost shipping={cart.shipping} />
       case "standard":
-        return <ShippingCourier />
+        return <ShippingCourier shipping={cart.shipping} />
+      default:
+        throw new Error("there is no such shipping option")
     }
   }
 
   if (!cart.shipping.service) {
-    return <div>Ładuję...</div>
+    return ""
   }
 
   return (
     <Wrapper>
       <h3>Adres dostawy</h3>
-      {settings(cart.shipping.service)}
+      {selectedShipping(cart.shipping.service)}
     </Wrapper>
   )
 }

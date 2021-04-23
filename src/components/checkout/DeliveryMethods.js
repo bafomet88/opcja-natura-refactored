@@ -2,6 +2,8 @@ import React, { useContext, useState, useEffect } from "react"
 import styled from "styled-components"
 import { CartContext } from "../../context/cartContext"
 
+import { financial } from "../../utils/functions/financial"
+
 const Wrapper = styled.section`
   position: relative;
 
@@ -12,11 +14,13 @@ const Wrapper = styled.section`
 
 const BoxWrapper = styled.div`
   display: flex;
+  justify-content: space-around;
 `
 
 const BoxItem = styled.ul`
   display: flex;
-  margin-left: 2em;
+  cursor: pointer;
+  padding: 10px;
 `
 
 const Icon = styled.div`
@@ -31,12 +35,10 @@ const Price = styled.h5`
 `
 
 const Summary = styled.div`
-  position: relative;
+  display: flex;
 `
 
 const DeliveryMethods = () => {
-  const [activeShipping, setActiveShipping] = useState(null)
-
   const {
     cart,
     shippingMethods,
@@ -60,12 +62,6 @@ const DeliveryMethods = () => {
     )
   }
 
-  useEffect(() => {
-    if (cart.shipping.service) {
-      setActiveShipping(cart.shipping.service)
-    }
-  }, [cart.shipping.service])
-
   const handleShipping = shippingId => {
     if (shippingId === "express") {
       openModal()
@@ -81,21 +77,21 @@ const DeliveryMethods = () => {
       {shippingMethods ? (
         <>
           <BoxWrapper>
-            {shippingMethods.map((item, index) => (
+            {shippingMethods.map(item => (
               <BoxItem
                 key={item.id}
                 onClick={() => handleShipping(item.id)}
-                className={`${item.id === activeShipping && "active"}`}
+                className={`${item.id === cart.shipping.service && "active"}`}
               >
-                <Icon>{index + 1}</Icon>
+                {/* <Icon>{index + 1}</Icon> */}
                 <Title>{item.name}</Title>
-                <Price>{item.price}</Price>
+                <Price>{financial(item.price, "PLN")}</Price>
               </BoxItem>
             ))}
           </BoxWrapper>
           <Summary>
-            <h5>Koszty dostawy</h5>
-            <span>20</span>
+            <h5>Koszty dostawy: </h5>
+            <span>{cart.shipment_price}</span>
           </Summary>
         </>
       ) : (

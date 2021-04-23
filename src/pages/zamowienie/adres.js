@@ -11,12 +11,20 @@ import { addScript } from "../../utils/functions/addScript"
 import { initInpostMap } from "../../utils/functions/initInpostMap"
 import { CartContext } from "../../context/cartContext"
 import "../../utils/css/inpostModal.css"
+import { form } from "../../components/styled/mixins/mixins"
 
-const DeliveryWrapper = styled.section`
-  max-width: 900px;
+const Wrapper = styled.section`
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 600px;
+  ${form}
+`
+
+const DeliveryWrapper = styled.section`
+  display: flex;
+  flex-direction: column;
 `
 
 export default function adres({ location }) {
@@ -34,16 +42,19 @@ export default function adres({ location }) {
 
   return (
     <Layout location={location}>
-      {cart && (
-        <>
-          <DeliveryWrapper>
-            <CountrySelect />
-            <DeliveryMethods />
-          </DeliveryWrapper>
-          <CustomerData />
-          <ShippingData />
-        </>
-      )}
+      <Wrapper>
+        {cart && (
+          <>
+            <DeliveryWrapper>
+              <CountrySelect />
+              <DeliveryMethods />
+            </DeliveryWrapper>
+
+            <CustomerData />
+            <ShippingData />
+          </>
+        )}
+      </Wrapper>
     </Layout>
   )
 }

@@ -7,6 +7,7 @@ const ShippingInPost = ({ shipping }) => {
       <div>Ulica: {shipping.address1}</div>
       <div>Miejscowość: {shipping.city}</div>
       <div>Numer Paczkomatu: {shipping.address2}</div>
+      <h3>koszt dostawy: {shipping.price}</h3>
     </>
   )
 }

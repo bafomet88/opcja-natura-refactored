@@ -2,12 +2,11 @@ import React, { useContext, useState } from "react"
 import styled from "styled-components"
 import Button from "../styled/elements/CheckoutButton"
 import { financial } from "../../utils/functions/financial"
-import CartFooterForm from "./CartFooterForms"
+import AddCoupon from "./AddCoupon"
+import AddComment from "./AddComment"
 import { Link } from "gatsby"
 
 import { CartContext } from "../../context/cartContext"
-
-import { cartData } from "./cartData"
 
 const Wrapper = styled.div`
   margin-top: auto;
@@ -15,6 +14,11 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 1em;
+
+  .order-sum {
+    font-size: ${({ theme }) => theme.fonts.fontSize.xl};
+    font-weight: bolder;
+  }
 `
 
 const CheckoutButton = styled(Button)`
@@ -25,11 +29,16 @@ const StyledButton = styled(Button)`
 `
 
 const CartSum = styled.span`
+  padding-bottom: 1em;
   justify-self: flex-start;
   text-transform: uppercase;
   border-bottom: 1px solid #000;
-  display: flex;
-  justify-content: space-between;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5em;
+  }
 `
 
 const ButtonContainer = styled.div`
@@ -39,23 +48,36 @@ const ButtonContainer = styled.div`
 `
 
 const CartFooter = React.memo(() => {
-  const { cart } = useContext(CartContext)
+  const { cart, setCartVisible } = useContext(CartContext)
 
   console.log("REDER CART FOOTER")
 
   return (
     <Wrapper>
       <CartSum>
-        <p>suma:</p>
-        <p>{financial(cart.grand_total, "PLN")}</p>
+        {cart.coupon_code && (
+          <div>
+            <p>rabat:</p>
+            <p>{financial(cart.discount_total, "PLN")}</p>
+          </div>
+        )}
+        <div>
+          <p>VAT:</p>
+          <p>{financial(cart.item_tax, "PLN")}</p>
+        </div>
+        <div>
+          <p className="order-sum">suma:</p>
+          <p className="order-sum">{financial(cart.grand_total, "PLN")}</p>
+        </div>
       </CartSum>
 
-      {cartData.map(item => {
-        return <CartFooterForm key={item.Id} {...item} />
-      })}
+      <AddCoupon />
+      {/* <AddComment /> */}
       <Link to="/zamowienie/adres">
         <ButtonContainer>
-          <CheckoutButton>Do kasy</CheckoutButton>
+          <CheckoutButton onClick={() => setCartVisible(false)}>
+            Do kasy
+          </CheckoutButton>
         </ButtonContainer>
       </Link>
     </Wrapper>

@@ -5,8 +5,19 @@ import useFormPersist from "react-hook-form-persist"
 /* import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup" */
 
-const Wrapper = styled.div`
-  position: relative;
+const Wrapper = styled.section`
+  margin-top: 2em;
+  display: grid;
+`
+
+const FormWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+`
+
+const Submit = styled.div`
+  justify-self: center;
 `
 
 /* const schema = yup.object().shape({
@@ -53,47 +64,70 @@ const BillingInPost = React.memo(() => {
   return (
     <Wrapper>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="firstName">Imię:</label>
-        <input
-          type="text"
-          placeholder="Imię"
-          name="firstName"
-          ref={register({
-            required: "To pole jest wymagane",
-          })}
-        />
-        {errors.firstName && <p>{errors.firstName.message}</p>}
-        <label htmlFor="lastName">Nazwisko:</label>
-        <input
-          type="text"
-          placeholder="Nazwisko"
-          name="lastName"
-          ref={register({
-            required: "To pole jest wymagane",
-          })}
-        />
-        {errors.firstName && <p>{errors.lastName.message}</p>}
-        <label htmlFor="mail">Mail:</label>
-        <input
-          type="email"
-          placeholder="Mail"
-          name="mail"
-          ref={register({
-            required: "To pole jest wymagane",
-          })}
-        />
-        {errors.firstName && <p>{errors.mail.message}</p>}
-        <label htmlFor="phone">Mail:</label>
-        <input
-          type="tel"
-          placeholder="Telefon"
-          name="phone"
-          ref={register({
-            required: "To pole jest wymagane",
-          })}
-        />
-        {errors.firstName && <p>{errors.phone.message}</p>}
-        <input type="submit" value="dodaj" />
+        <FormWrapper>
+          <div className="group">
+            <input
+              type="text"
+              placeholder="Imię"
+              name="firstName"
+              ref={register({
+                required: "To pole jest wymagane",
+              })}
+            />
+            <span className="highlight"></span>
+            <span className="bar"></span>
+            <label htmlFor="firstName">Imię:</label>
+            {errors.firstName && <p>{errors.firstName.message}</p>}
+          </div>
+
+          <div className="group">
+            <input
+              type="text"
+              placeholder="Nazwisko"
+              name="lastName"
+              ref={register({
+                required: "To pole jest wymagane",
+              })}
+            />
+            <span className="highlight"></span>
+            <span className="bar"></span>
+            <label htmlFor="firstName">Nazwisko:</label>
+            {errors.firstName && <p>{errors.lastName.message}</p>}
+          </div>
+
+          <div className="group">
+            <input
+              type="email"
+              placeholder="Mail"
+              name="mail"
+              ref={register({
+                required: "To pole jest wymagane",
+              })}
+            />
+            <span className="highlight"></span>
+            <span className="bar"></span>
+            <label htmlFor="mail">Mail:</label>
+            {errors.firstName && <p>{errors.mail.message}</p>}
+          </div>
+
+          <div className="group">
+            <input
+              type="tel"
+              placeholder="Telefon"
+              name="phone"
+              ref={register({
+                required: "To pole jest wymagane",
+              })}
+            />
+            <span className="highlight"></span>
+            <span className="bar"></span>
+            <label htmlFor="phone">Telefon:</label>
+            {errors.firstName && <p>{errors.phone.message}</p>}
+          </div>
+        </FormWrapper>
+        <Submit>
+          <input type="submit" value="dodaj" />
+        </Submit>
       </form>
     </Wrapper>
   )
