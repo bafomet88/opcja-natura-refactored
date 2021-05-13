@@ -40,15 +40,9 @@ const Backdrop = styled.section`
 `
 
 const Cart = React.memo(() => {
-  const { cart, cartVisible, handleUpadateCountry } = useContext(CartContext)
+  const { cart, cartVisible } = useContext(CartContext)
 
   console.log("RENDERING CART component", cart)
-
-  /*  useEffect(() => {
-    if (!cart.billing.country) {
-      handleUpadateCountry("PL")
-    }
-  }, []) */
 
   let backdrop
 
@@ -57,7 +51,14 @@ const Cart = React.memo(() => {
   }
 
   if (!cart.items) {
-    return <EmptyCart />
+    return (
+      <Wrapper>
+        <ScrollingWrapper>
+          <CartHeader />
+          <EmptyCart />
+        </ScrollingWrapper>
+      </Wrapper>
+    )
   }
 
   if (cartVisible) {

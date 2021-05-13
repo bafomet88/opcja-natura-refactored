@@ -85,7 +85,7 @@ export const form = css`
     font-size: 1em;
     padding: 10px 10px 10px 5px;
     display: block;
-    width: 120px;
+    width: 200px;
     border: none;
     border-bottom: 1px solid #757575;
   }
@@ -122,7 +122,7 @@ export const form = css`
   .bar:before,
   .bar:after {
     content: "";
-    height: 2px;
+    height: 1px;
     width: 0;
     bottom: 1px;
     position: absolute;

@@ -83,9 +83,7 @@ const StyledMinus = styled(Minus)`
 `
 
 const CartItem = item => {
-  const { handleUpdateItem, handleRemoveItem, loading } = useContext(
-    CartContext
-  )
+  const { handleUpdateItem, handleRemoveItem } = useContext(CartContext)
 
   console.log("RENDER CART ITEM")
 
@@ -115,7 +113,6 @@ const CartItem = item => {
         <span role="button" onClick={() => handleRemoveItem(item.id)}>
           usuń
         </span>
-        {loading && <p>Loding...</p>}
       </ItemFooter>
     </ItemWrapper>
   )

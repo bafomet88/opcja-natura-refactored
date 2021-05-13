@@ -2,8 +2,11 @@ import React, { useEffect } from "react"
 import styled from "styled-components"
 import { useForm } from "react-hook-form"
 import useFormPersist from "react-hook-form-persist"
-/* import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup" */
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
+
+import FormInput from "../form/FormInput"
+import CountrySelect from "./CountrySelect"
 
 const Wrapper = styled.section`
   margin-top: 2em;
@@ -11,21 +14,23 @@ const Wrapper = styled.section`
 `
 
 const FormWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  position: relative;
 `
 
 const Submit = styled.div`
   justify-self: center;
 `
 
-/* const schema = yup.object().shape({
+const schema = yup.object().shape({
   firstName: yup.string().required("To pole jest wymagane"),
   lastName: yup.string().required("To pole jest wymagane"),
-  mail: yup.string().mail().required("To pole jest wymagane"),
+  mail: yup.string().email().required("To pole jest wymagane"),
   phone: yup.number().positive().integer().required("To pole jest wymagane"),
-})  */
+  street: yup.string().required("To pole jest wymagane"),
+  aparment: yup.string(),
+  city: yup.string().required("To pole jest wymagane"),
+  zipCode: yup.string().required("To pole jest wymagane"),
+})
 
 const setDefaultValue = () => {
   if (sessionStorage.form) {
@@ -50,7 +55,7 @@ const BillingInPost = React.memo(() => {
     setValue,
   } = useForm({
     setDefaultValue,
-    /*     resolver: yupResolver(schema), */
+    resolver: yupResolver(schema),
   })
 
   useFormPersist("form", { watch, setValue })
@@ -64,69 +69,61 @@ const BillingInPost = React.memo(() => {
   return (
     <Wrapper>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <h3>Informacje kontaktowe</h3>
         <FormWrapper>
-          <div className="group">
-            <input
-              type="text"
-              placeholder="Imię"
-              name="firstName"
-              ref={register({
-                required: "To pole jest wymagane",
-              })}
-            />
-            <span className="highlight"></span>
-            <span className="bar"></span>
-            <label htmlFor="firstName">Imię:</label>
-            {errors.firstName && <p>{errors.firstName.message}</p>}
-          </div>
-
-          <div className="group">
-            <input
-              type="text"
-              placeholder="Nazwisko"
-              name="lastName"
-              ref={register({
-                required: "To pole jest wymagane",
-              })}
-            />
-            <span className="highlight"></span>
-            <span className="bar"></span>
-            <label htmlFor="firstName">Nazwisko:</label>
-            {errors.firstName && <p>{errors.lastName.message}</p>}
-          </div>
-
-          <div className="group">
-            <input
-              type="email"
-              placeholder="Mail"
-              name="mail"
-              ref={register({
-                required: "To pole jest wymagane",
-              })}
-            />
-            <span className="highlight"></span>
-            <span className="bar"></span>
-            <label htmlFor="mail">Mail:</label>
-            {errors.firstName && <p>{errors.mail.message}</p>}
-          </div>
-
-          <div className="group">
-            <input
-              type="tel"
-              placeholder="Telefon"
-              name="phone"
-              ref={register({
-                required: "To pole jest wymagane",
-              })}
-            />
-            <span className="highlight"></span>
-            <span className="bar"></span>
-            <label htmlFor="phone">Telefon:</label>
-            {errors.firstName && <p>{errors.phone.message}</p>}
-          </div>
+          <FormInput
+            type="text"
+            placeholder="Adres Mail"
+            name="mail"
+            id="mail"
+            register={register}
+            errors={errors.mail?.message}
+          />
+          <FormInput
+            type="tel"
+            placeholder="Telefon"
+            name="phone"
+            id="phone"
+            register={register}
+            errors={errors.phone?.message}
+          />
+          <h3>Adres</h3>
+          <FormInput
+            type="text"
+            placeholder="Adres"
+            name="street"
+            id="street"
+            register={register}
+            errors={errors.street?.message}
+          />
+          <FormInput
+            type="text"
+            placeholder="Mieszkanie"
+            name="apartment"
+            id="apartment"
+            register={register}
+            errors={errors.apratment?.message}
+          />
+          <FormInput
+            type="text"
+            placeholder="Miejscowość"
+            name="city"
+            id="city"
+            register={register}
+            errors={errors.zipCode?.message}
+          />
+          <FormInput
+            type="text"
+            placeholder="Kod Pocztowy"
+            name="zipCode"
+            id="zipCode"
+            register={register}
+            errors={errors.zipCode?.message}
+          />
+          <CountrySelect />
         </FormWrapper>
         <Submit>
-          <input type="submit" value="dodaj" />
+          <input type="submit" value="kontynuuj do wysyłki" />
         </Submit>
       </form>
     </Wrapper>

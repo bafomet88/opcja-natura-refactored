@@ -3,11 +3,11 @@ import React from "react"
 const ShippingCourier = ({ shipping }) => {
   return (
     <>
-      <h3>Kurier dostawa do domu</h3>
+      <h5>Kurier dostawa do domu</h5>
       <div>Ulica: tu będzie formularz</div>
       <div>Miejscowość: tu będzie formularz</div>
       <div>Numer Paczkomatu: tu będzie formularz</div>
-      <h3>koszt dostawy: {shipping.price}</h3>
+      <h5>koszt dostawy: {shipping.price}</h5>
     </>
   )
 }

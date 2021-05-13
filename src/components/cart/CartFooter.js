@@ -71,8 +71,8 @@ const CartFooter = React.memo(() => {
         </div>
       </CartSum>
 
-      <AddCoupon />
-      {/* <AddComment /> */}
+      {/*   <AddCoupon />
+       <AddComment /> */}
       <Link to="/zamowienie/adres">
         <ButtonContainer>
           <CheckoutButton onClick={() => setCartVisible(false)}>

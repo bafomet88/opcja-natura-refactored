@@ -8,6 +8,7 @@ const Wrapper = styled.section`
 
   label {
     margin-right: 1em;
+    top: -1em;
   }
 `
 
@@ -26,7 +27,7 @@ const CountrySelect = React.memo(() => {
 
   console.log("shippignCountry", shippingCountry)
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (!shippingCountry && !cart.billing.country) {
       handleUpadateCountry(defaultCountry).then(() => {
         handleGetShipping()
@@ -36,8 +37,14 @@ const CountrySelect = React.memo(() => {
       handleGetShipping()
       console.log("FIRST SHIPPING RENDER: get country from cart")
     }
+  }, []) */
+
+  //initial get country form cart and generate shipping methods
+  useEffect(() => {
+    handleGetShipping()
   }, [])
 
+  //generate shipping methods when user changes country
   useEffect(() => {
     if (shippingCountry) {
       handleUpadateCountry(shippingCountry).then(() => {

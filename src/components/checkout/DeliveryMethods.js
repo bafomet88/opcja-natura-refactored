@@ -36,6 +36,8 @@ const Price = styled.h5`
 
 const Summary = styled.div`
   display: flex;
+  justify-content: center;
+  margin-top: 2em;
 `
 
 const DeliveryMethods = () => {
@@ -74,6 +76,7 @@ const DeliveryMethods = () => {
 
   return (
     <Wrapper>
+      <h3>Wybierz opcje dostawy:</h3>
       {shippingMethods ? (
         <>
           <BoxWrapper>
