@@ -18,7 +18,11 @@ const Wrapper = styled.section`
 export default function adres({ location }) {
   const { cart } = useContext(CartContext)
 
-  console.log("render adres page", cart)
+  console.log("render adress page", cart)
+
+  if (!cart) {
+    return ""
+  }
 
   return (
     <Layout location={location}>

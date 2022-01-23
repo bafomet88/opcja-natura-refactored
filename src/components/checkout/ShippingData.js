@@ -28,6 +28,10 @@ const ShippingData = () => {
     }
   }
 
+  if (!cart) {
+    return ""
+  }
+
   if (!cart.shipping.service) {
     return ""
   }

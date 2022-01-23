@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, { useContext, useState } from "react"
 import styled from "styled-components"
 import { CartContext } from "../../context/cartContext"
 
@@ -17,49 +17,18 @@ const options = [
   { value: "DE", name: "Hitler" },
 ]
 
-const CountrySelect = React.memo(() => {
-  const { handleUpadateCountry, handleGetShipping, cart } = useContext(
-    CartContext
-  )
+const CountrySelect = React.memo(({ register, name, id }) => {
+  const { cart } = useContext(CartContext)
 
   const [shippingCountry, setShippingCountry] = useState("")
-  const defaultCountry = "PL"
-
-  console.log("shippignCountry", shippingCountry)
-
-  /*   useEffect(() => {
-    if (!shippingCountry && !cart.billing.country) {
-      handleUpadateCountry(defaultCountry).then(() => {
-        handleGetShipping()
-        console.log("FIRST SHIPPING RENDER: defoult caountry")
-      })
-    } else if (!shippingCountry && cart.billing.country) {
-      handleGetShipping()
-      console.log("FIRST SHIPPING RENDER: get country from cart")
-    }
-  }, []) */
-
-  //initial get country form cart and generate shipping methods
-  useEffect(() => {
-    handleGetShipping()
-  }, [])
-
-  //generate shipping methods when user changes country
-  useEffect(() => {
-    if (shippingCountry) {
-      handleUpadateCountry(shippingCountry).then(() => {
-        handleGetShipping()
-        console.log("change country to ship")
-      })
-    }
-  }, [shippingCountry])
 
   return (
     <Wrapper>
       <label htmlFor="delivery-country">Kraj dostawy</label>
       <select
-        name="country"
-        id="delivery-country"
+        {...register(`${name}`)}
+        name={name}
+        id={id}
         value={shippingCountry || cart.billing.country}
         onChange={e => setShippingCountry(e.target.value)}
       >

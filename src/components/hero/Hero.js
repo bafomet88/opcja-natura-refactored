@@ -37,7 +37,7 @@ const GbiBridged = ({ children }) => {
 
   return (
     <StyledBanner Tag="section" image={pluginImage}>
-      {children}}
+      {children}
     </StyledBanner>
   )
 }

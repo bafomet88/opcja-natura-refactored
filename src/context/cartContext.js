@@ -29,7 +29,7 @@ const cartReducer = (currCart, action) => {
       return { ...currCart, cart: action.cart }
     case "SET_SHIPPING_ADDRESS":
       return { ...currCart, cart: action.cart }
-    case "SET_SHIPPING_INPOST":
+    case "SET_CUSTOMER_INFO":
       return { ...currCart, cart: action.cart }
     case "SET_DEFAULT_COUNTRY":
       return { ...currCart, cart: action.cart }
@@ -69,6 +69,7 @@ const CartContextProvider = ({ children }) => {
   const [couponMessage, setCouponMessage] = useState("")
   const [commentMessage, setCommentMessage] = useState("")
 
+  // initial fetch cart. Fetch it with defaoult PL as shipping and billing country
   const fetchCart = async () => {
     let cart = await swell.cart.get()
 
@@ -86,6 +87,7 @@ const CartContextProvider = ({ children }) => {
     console.log("SET_CART", cart)
   }
 
+  // Add item to cart
   const handleAddToCart = async (productId, quantity) => {
     try {
       const cart = await swell.cart.addItem(productId, quantity)
@@ -98,6 +100,7 @@ const CartContextProvider = ({ children }) => {
     }
   }
 
+  // Update line item amount in cart
   const handleUpdateItem = async (productId, newQuantity) => {
     dispatchHttp({ type: "SEND" })
     try {
@@ -113,6 +116,7 @@ const CartContextProvider = ({ children }) => {
     }
   }
 
+  //remove line item from cart
   const handleRemoveItem = async productId => {
     dispatchHttp({ type: "SEND" })
     try {
@@ -127,6 +131,7 @@ const CartContextProvider = ({ children }) => {
     }
   }
 
+  // apply discount to cart
   const handleApplyCoupon = async couponName => {
     dispatchHttp({ type: "SEND" })
     try {
@@ -139,6 +144,7 @@ const CartContextProvider = ({ children }) => {
     }
   }
 
+  // apply comment to cart
   const handleApplyComment = useCallback(
     async commentText => {
       dispatchHttp({ type: "SEND" })
@@ -158,11 +164,12 @@ const CartContextProvider = ({ children }) => {
     [cart.comments]
   )
 
+  // set state of cart drawer
   const handleCartVisible = () => {
     setCartVisible(!cartVisible)
   }
 
-  const handleUpadateCountry = async countryCode => {
+  /* const handleUpadateCountry = async countryCode => {
     const cart = await swell.cart.update({
       billing: {
         country: `${countryCode}`,
@@ -178,12 +185,14 @@ const CartContextProvider = ({ children }) => {
         city: null,
         zip: null,
       },
-    })
+    }) 
 
     dispatchCart({ type: "SET_SHIPPING_COUNTRY", cart: cart })
     console.log("SET_SHIPPING_COUNTRY", cart)
   }
+  */
 
+  // Get shipping rates for cart.shipping.country
   const handleGetShipping = async () => {
     const response = await swell.cart.getShippingRates()
 
@@ -191,7 +200,9 @@ const CartContextProvider = ({ children }) => {
     console.log("GET COUNTRY", response.services)
   }
 
+  // Set shipping method to cart
   const handleSetShipping = async shippingId => {
+    dispatchHttp({ type: "SEND" })
     const cart = await swell.cart.update({
       shipping: {
         service: shippingId,
@@ -199,89 +210,79 @@ const CartContextProvider = ({ children }) => {
     })
 
     dispatchCart({ type: "SET_SHIPPING_METHOD", cart: cart })
+    dispatchHttp({ type: "RESPONSE" })
     console.log("SET_SHIPPING_METHOD", cart)
   }
 
-  const handleUpdateShippingAddress = async (adress1, address2, city, zip) => {
+  // Set cart billing (customer) information
+
+  const handleUpdatCustomerInfo = async (
+    firstname,
+    lastName,
+    email,
+    phone,
+    street,
+    apartment,
+    city,
+    zipCode,
+    country
+  ) => {
+    dispatchHttp({ type: "SEND" })
+    const cart = await swell.cart.update({
+      billing: {
+        // name: email,
+        first_name: firstname,
+        last_name: lastName,
+        address1: street,
+        address2: `${apartment || ""}`,
+        city: `${city || ""}`,
+        zip: `${zipCode || ""}`,
+        phone: phone,
+        country: country,
+      },
+      metadata: {
+        email: email,
+      },
+    })
+
+    dispatchCart({ type: "SET_CUSTOMER_INFO", cart: cart })
+    dispatchHttp({ type: "RESPONSE" })
+    console.log("SET_CUSTOMER_INFO", cart)
+  }
+
+  // Update cart shipping info (including InPost selection)
+  const handleUpdateShippingAddress = async (
+    adress1,
+    address2,
+    city,
+    zip,
+    country,
+    inPostMachineNo
+  ) => {
+    dispatchHttp({ type: "SEND" })
     const cart = await swell.cart.update({
       shipping: {
-        address1: `${adress1 || ""}`,
+        address1: adress1,
         address2: `${address2 || ""}`,
-        city: `${city || ""}`,
-        zip: `${zip || ""}`,
+        city: city,
+        zip: zip,
+        country: country,
       },
-      billing: {
-        address1: `${adress1 || ""}`,
-        address2: `${address2 || ""}`,
-        city: `${city || ""}`,
-        zip: `${zip || ""}`,
+      metadata: {
+        inPost: {
+          machineNo: `${inPostMachineNo || ""}`,
+        },
       },
     })
 
     dispatchCart({ type: "SET_SHIPPING_ADDRESS", cart: cart })
+    dispatchHttp({ type: "RESPONSE" })
     console.log("SET_SHIPPING_ADRESS", cart)
-  }
-
-  const handleUpdatCustomerInfo = async (name, surname, mail, phone) => {
-    const cart = await swell.cart.update({
-      shipping: {
-        address1: `${adress1 || ""}`,
-        address2: `${address2 || ""}`,
-        city: `${city || ""}`,
-        zip: `${zip || ""}`,
-      },
-      billing: {
-        address1: `${adress1 || ""}`,
-        address2: `${address2 || ""}`,
-        city: `${city || ""}`,
-        zip: `${zip || ""}`,
-      },
-    })
-
-    dispatchCart({ type: "SET_SHIPPING_ADDRESS", cart: cart })
-    console.log("SET_SHIPPING_ADRESS", cart)
-  }
-
-  const setDefaultCountry = async () => {
-    const cart = await swell.cart.update({
-      shipping: {
-        country: "PL",
-      },
-      billing: {
-        country: "PL",
-      },
-    })
-
-    dispatchCart({ type: "SET_DEFAULT_COUNTRY", cart: cart })
-    console.log("SET_DEFAULT_COUNTRY", cart)
-  }
-
-  const handleUpdateShippingInPost = async (adress1, machineNo, city, zip) => {
-    const cart = await swell.cart.update({
-      shipping: {
-        address1: `${adress1 || ""}`,
-        address2: `${machineNo || ""}`,
-        city: `${city || ""}`,
-        zip: `${zip || ""}`,
-      },
-    })
-
-    dispatchCart({ type: "SET_SHIPPING_INPOST", cart: cart })
-    console.log("SET_SHIPPING_INPOST", cart)
   }
 
   useEffect(() => {
     fetchCart()
   }, [])
-
-  /*  useEffect(() => {
-    if (!cart) {
-      handleUpadateCountry("PL")
-      console.log("update default country to cart")
-    }
-  }, []) */
-
-  console.log(httpState.loading)
 
   const value = useMemo(
     () => ({
@@ -298,12 +299,12 @@ const CartContextProvider = ({ children }) => {
       handleCartVisible,
       couponMessage,
       commentMessage,
-      handleUpadateCountry,
+      // handleUpadateCountry,
       handleGetShipping,
       shippingMethods,
       handleSetShipping,
       handleUpdateShippingAddress,
-      handleUpdateShippingInPost,
+      handleUpdatCustomerInfo,
     }),
     [
       cart,

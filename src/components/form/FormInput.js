@@ -12,11 +12,12 @@ const FormInput = ({
   return (
     <div className="group">
       <input
-        {...register(name)}
+        {...register(`${name}`)}
         type={type}
         placeholder={placeholder}
         name={name}
         id={id}
+        onBlur={e => console.log("leave mail field")}
       />
       <span className="highlight"></span>
       <span className="bar"></span>

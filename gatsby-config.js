@@ -23,7 +23,14 @@ module.exports = {
       options: {
         storeId: "opcja-natura",
         secretKey: process.env.GATSBY_SWELL_SECRET_KEY,
-        dataTypes: ["category", "product"],
+        dataTypes: ["category", "product", "attribute", "promotion"],
+      },
+    },
+    {
+      resolve: "gatsby-source-contentful",
+      options: {
+        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+        spaceId: process.env.CONTENTFUL_SPACE_ID,
       },
     },
   ],

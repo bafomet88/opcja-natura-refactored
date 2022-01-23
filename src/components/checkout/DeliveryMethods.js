@@ -45,18 +45,26 @@ const DeliveryMethods = () => {
     cart,
     shippingMethods,
     handleSetShipping,
-    handleUpdateShippingInPost,
+    handleUpdateShippingAddress,
+    handleGetShipping,
   } = useContext(CartContext)
+
+  //initial get country form cart and generate shipping methods
+  useEffect(() => {
+    handleGetShipping()
+  }, [])
 
   const openModal = () => {
     easyPack.modalMap(
       function (point, modal) {
         console.log(point)
-        handleUpdateShippingInPost(
+        handleUpdateShippingAddress(
           point.address.line1,
-          point.name,
+          point.address.line2,
           point.address_details.city,
-          point.address_details.post_code
+          point.address_details.post_code,
+          "PL",
+          point.name
         )
         modal.closeModal()
       },
@@ -72,7 +80,10 @@ const DeliveryMethods = () => {
       handleSetShipping(shippingId)
     }
   }
-  console.log("deliveryMethods render")
+
+  if (!cart) {
+    return ""
+  }
 
   return (
     <Wrapper>

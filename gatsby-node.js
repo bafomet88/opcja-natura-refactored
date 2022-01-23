@@ -25,6 +25,14 @@ exports.createPages = async ({ graphql, actions }) => {
           id
         }
       }
+      products: allSwellProduct {
+        nodes {
+          attributes {
+            id
+          }
+          slug
+        }
+      }
     }
   `)
 
@@ -35,6 +43,17 @@ exports.createPages = async ({ graphql, actions }) => {
       context: {
         slug: category.slug,
         id: category.id,
+      },
+    })
+  })
+
+  result.data.products.nodes.forEach(product => {
+    createPage({
+      path: `sklep/${product.slug}`,
+      component: path.resolve(`src/templates/product-template.js`),
+      context: {
+        slug: product.slug,
+        id: product.attributes.id,
       },
     })
   })

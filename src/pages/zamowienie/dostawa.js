@@ -1,11 +1,7 @@
 import React, { useEffect } from "react"
 import styled from "styled-components"
 import Layout from "../../components/layout/Layout"
-import {
-  DeliveryMethods,
-  CountrySelect,
-  ShippingData,
-} from "../../components/index"
+import { DeliveryMethods, ShippingData } from "../../components/index"
 import { addScript } from "../../utils/functions/addScript"
 import { initInpostMap } from "../../utils/functions/initInpostMap"
 import "../../utils/css/inpostModal.css"
@@ -39,8 +35,8 @@ export default function dostawa({ location }) {
   return (
     <Layout location={location}>
       <Wrapper>
+        <p>to jest strona dostawa</p>
         <DeliveryWrapper>
-          <CountrySelect />
           <DeliveryMethods />
         </DeliveryWrapper>
         <ShippingData />
